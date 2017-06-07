@@ -1,0 +1,100 @@
+---
+title: "Untitled"
+author: "Marcos Vital"
+date: "7 de junho de 2017"
+output: html_document
+---
+
+Elementos básicos de Rmarkdown:
+
+Todo texto comum que escrevermos, vai virar apenas texto mesmo, como este pedaço aqui. Perceba que ele está quebrando as linhas de acordo com o tamanho da janela do script, mas no documento final vai depender das margens (se for doc ou pdf) ou do tamanho da janela do navegador se for um html. Se você quiser dar uma linha de espaço e começar um novo parágrafo, dê enter duas vezes!
+
+Para escrever em negrito, use dois astericos antes e dois depois, assim: **negrito**.
+
+Para itálico, use um antes e um depois: *itálico*.
+
+Para título, use hashtags, vai ficar assim:
+
+# Título 1
+
+## Título 2
+
+### Título 3
+
+#### Título 4
+
+##### Título 5
+
+###### Título 6
+
+
+Para inserir uma linha divisória, coloque três asteriscos na sequência, assim:
+
+***
+
+Se eu quiser inserir uma linha a mais de espaço além do normal, coloque uma barra invertida seguida de um espaço, assim:
+
+\ 
+
+Agora o espaço entre as linhas foi maior.
+
+Se eu quiser uma divisória entre espasços maiores, combine estes elementos assim:
+
+\ 
+
+***
+
+\ 
+
+Agora ficou um espação com uma barra no meio.
+
+Para inserir um link, escreva o texto entre conchetes e cole o endereço entre parênteses logo depois, sem espaços, assim:
+
+[link para a minha página do github](https://github.com/marcosvital)
+
+Se eu quiser inserir uma imagem, eu coloco uma exclamação, um par de colchetes e depois o link, no mesmo formato acima. Veja o exemplo:
+
+![](https://github.com/marcosvital/teach-R-project/raw/master/TeachR.png)
+
+Para inserir código do R, crie um code chunk, que pode ser criado via menu acima ou use o atalho ctrl + alt + i
+
+Tido o que você escrever no chunk vai ser interpretado pelo R e aparecer no output:
+
+```{r}
+10+10
+
+teste<-c(1,2,3,4,5)
+
+mean(teste)
+```
+
+
+O chunck pode ter opções, como por exemplo echo=F que omite o código e mostra só o resultado. Por exemplo:
+
+```{r, echo=F}
+data(iris)
+
+boxplot(Sepal.Length~Species, data=iris)
+
+
+```
+
+E tem o contrário, eu posso chamar o código mas não interpretar! Basta usar eval=F, assim:
+
+```{r, eval=F}
+10+10
+
+teste<-c(1,2,3,4,5)
+
+mean(teste)
+
+```
+
+\ 
+
+# Para aprender mais!
+
+Veja o guia de referência na página do Rstudio, [aqui](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf).
+
+E veja os dois cheat sheets, o [primeiro aqui](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) e o [segundo aqui](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf).
+
