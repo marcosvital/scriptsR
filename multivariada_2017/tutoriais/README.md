@@ -1,4 +1,4 @@
-Sim, aqui está o que provavelmente te interessa! :D
+**Sim, aqui está o que provavelmente te interessa! :D**
 
 Nesta pasta armazeno os tutoriais gerados durante as aulas, em formato html, a partir do RStudio. Se você quer ver um guia com os procedimentos e resultados de cada aula, então é aqui mesmo que você deveria estar.
 
