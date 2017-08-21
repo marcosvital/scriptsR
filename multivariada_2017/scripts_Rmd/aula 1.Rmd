@@ -1,0 +1,222 @@
+---
+title: "Estatística Multivariada - aula 1"
+author: "Marcos Vital"
+date: "15 de agosto de 2017"
+output: html_document
+---
+
+### Aula introdutória da disciplina Estatística Multivariada, do PPG-DIBICT UFAL
+
+Este documento é o segundo da série construídas ao longo da disciplina de Estatística Multivariada ministrada por mim no Programa de Pós-graduação em Diversidade Biológica e Conservação dos Trópicos da UFAL. Esta é a primeira aula com uma abordagem multivariada, de forma que esta é a aula 1, apesar de ser o segundo script. ;)
+
+Neste primeiro script nós trabalhamos com parte dos dados que acompanham o livro [Numerical Ecology With R](http://adn.biol.umontreal.ca/~numericalecology/numecolR/) com o objetivo de começar a explorar dados multivariados no R. Os dados do livro podem ser baixados gratuitamente [aqui](http://adn.biol.umontreal.ca/~numericalecology/numecolR/), e são essenciais para se reproduzir as análises.
+
+\ 
+
+***
+
+\ 
+
+### Estabelecendo a área de trabalho e lendo os arquivos necessários
+
+Antes de começar, lembre-se de salvar os arquivos de dados na pasta de trabalho que será utilizada. Nesta aula, vamos usar os dados que estão presentes nos arquivos "DoubsSpe.csv", "DoubsEnv.csv" e "DoubsSpa.csv".
+
+```{r}
+setwd("D:/R/multivariada 2017")
+#Mude o endereço acima, para o da pasta de trabalho no seu computador
+
+#Ou, se preferir, faça: setwd(choose.dir())
+#Neste caso, o R vai abrir uma janela, e você seleciona a pasta manualmente
+
+#Conferindo os arquivos da pasta:
+dir()
+
+spe<-read.csv("DoubsSpe.csv", row.names=1)  #Dados das espécies de peixes
+env<-read.csv("DoubsEnv.csv", row.names=1)  #Variáveis ambientais nos locais de coleta
+spa<-read.csv("DoubsSpa.csv", row.names=1)  #Coordenadas dos locais de coleta
+
+#O argumento row.names=1 indica que a primeira coluna dos arquivos contém os nomes das unidades amostrais
+
+#Conferindo os dados com a função str:
+str(spe)
+str(env)
+str(spa)
+
+#Alternativamente, você pode conferir os dados usando summary()
+#Mas cuidado: não é muito prático quando os dados tem muitas colunas (como é o caso do nosso objeto spe)
+
+```
+
+**Antes de prosseguir, vamos carregar os pacotes necessários**
+
+```{r}
+library(vegan)
+
+#Se você não tem o pacote, pode mandar o R instalar usando o comando install.packages("vegan")
+
+```
+
+
+\ 
+
+***
+
+\ 
+
+### Começando a trabalhar com os dados
+
+Vamos começar realizando algumas explorações dos dados.
+
+**Criando uma visualização espacial das unidadades amostrais**
+
+Os dados foram coletados ao longo de um rio, e as coordenadas de cada ponto de coleta estão no objeto `spa`. Podemos usará-lo para criar um mapa simples dos pontos de coleta:
+
+```{r}
+plot(spa$X, spa$Y)
+```
+
+Como estamos tratando de um rio, uma boa opção de visualização seria conectar os pontos com linhas, para dar uma ideia geral da forma do curso d'água:
+
+```{r, fig.height=8}
+plot(spa$X, spa$Y, type="n")
+lines(spa$X, spa$Y, col="blue4")
+text(spa$X, spa$Y, row.names(spa), col="red")
+
+```
+
+Usamos a função `plot` para criar o gráfico em branco, como se fosse uma moldura, com argumento `type="n"`. Na sequência, as funções `lines` e `text` foram usadas para se adicionar as linhas conectando os pontos de coleta e os nomes das unidades amostrais.
+
+
+**Adicionando riqueza de espécies**
+
+Usando o gráfico anterior como base, podemos agregar mais informações, como o número de espécies coletadas em cada ponto, por exemplo. A riqueza será calculada com a função `specnumber` do `vegan`:
+
+```{r, fig.height=8}
+riqueza<-specnumber(spe)
+
+plot(spa$X, spa$Y, type="n", ylim=c(20, 120), xlab="Coordenada X (km)", ylab="Coordenada Y (km)", las=1)
+lines(spa$X, spa$Y, col="blue4")
+points(spa$X, spa$Y, cex=riqueza/3.5, pch=16, col="gray")  #Aqui adicionamos círculos cinza, com tamanho proporcional ao número de espécies de cada ponto.
+points(spa$X, spa$Y, cex=riqueza/3.5, pch=1)  #Agora adicionamos bordas aos círculos.
+points(spa$X, spa$Y, cex=0.5, pch=16)  #E, finalmente, adicionamos um ponto central em cada ponto.
+
+```
+
+Aqui adicionamos alguns argumentos na função `plot`, para gerarmos um gráfico mais apresentável. Na sequência, usamos a função `points` para adicionar os registros de riqueza de espécies.
+
+O truque aqui foi usar o argumento `cex` para alterar o tamanho dos pontos: usamos os valores de riqueza para isso, mas como os pontos ficariam grandes demais usando os valores totais da variável, dividimos por 3.5 para gerar um resultado mais aceitável (mas note que o valor usado na divisão foi desoberto na base da tentativa e erro, ok? Brinque com estes valores para ver como funciona).
+
+
+\ 
+
+***
+
+\ 
+
+### Explorando correlações
+
+As correlações podem ser calculados no R com a função `cor`, e podemos determinar qual tipo de correlação queremos com o argumento `method`. No exemplo a seguir, vamos separar um conjunto de variáveis físico-químicas da água e calcular a correlação de Pearson entre elas. Neste exemplo estamos partindo de Pearson como método apenas como um chute, e mais adiante vamos espiar as distribuições de valores das nossas variáveis para saber se de fato foi uma boa escolha.
+
+
+```{r}
+#Vamos criar um objeto com as variáveis físico-químicas da água:
+fisqui<-env[ , 5:11]
+
+#Correlações entre as variáveis:
+cor(fisqui, method="pearson")
+
+```
+
+Prontinho, temos uma matriz de correlação. Mas será que podemos agregar mais informação?
+
+**Vamos criar um painel de correlações**
+
+Vamos começar criando um simples painel de gráficos de dispersão em forma de matriz: ou seja, comparando cada variável, par a par:
+
+```{r}
+#Aqui a função básica:
+pairs(fisqui)
+
+#Vamos modificá-la para ficar mais legal!
+```
+
+E agora vamos modificar a função, para apresentar diferentes elementos em dierentes partes do painel.
+
+Primeiro, vamos criar a função panel.hist
+(copiando e colando do help da função pairs):
+
+```{r}
+panel.hist <- function(x, ...)
+{
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(usr[1:2], 0, 1.5) )
+    h <- hist(x, plot = FALSE)
+    breaks <- h$breaks; nB <- length(breaks)
+    y <- h$counts; y <- y/max(y)
+    rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
+
+```
+
+Agora, vamos fazer o mesmo com a função panel.cor:
+
+```{r}
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+    usr <- par("usr"); on.exit(par(usr))
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
+    if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = 2)
+}
+```
+
+Na minha versão eu modifiquei a forma do argumento `cex`, pois não gosto dos números com tamanho proporcional ao valor da correlação.
+
+Agora vamos fazer o novo painel!
+
+```{r, fig.height=8, fig.width=8}
+
+pairs(fisqui, diag.panel=panel.hist, upper.panel = panel.cor)
+```
+
+Bonitinho, não?
+
+Agora temos outros elementos para interpretar. Note que, de cara, podemos notar que muitas das relações são claramente não lineares, que existem alguns valores discrepantes para algumas variáveis e que a distribuição de frequências de boa parte das variáveis é altamente assimétrica. Neste contexto, eu diria que a correlação de Pearson não deve ser uma boa escolha, de forma que podemos refazer o painel.
+
+Uma possibilidade seria transformar os dados (por log, por exemplo); a outra seria usar a correlação não paramétrica de Spearman.
+
+Você pode transformar os dados por log usando a função `log` ou `log10`. E se quiser calcular a correlação de Spearman, basta adicionar o argumento `method="spearman" na função `cor` (você pode fazer isso usando a função livremente ou alterando a sua chamada dentro de `panel.cor`).
+
+Agora é com vocês. Como sugestão, sugiro explorar as duas possibilidades acima.
+
+Bom, acho que por hoje é só.
+
+Um abração, e até o próximo script!
+
+
+[Prof Marcos](https://medium.com/@marcosvital)
+
+\ 
+
+***
+
+Este documento faz parte do material que disponibilizo no meu blog, o ["Cantinho do R"](http://cantinhodor.wordpress.com/), e foi  foi criado utilizando o software R, o programa RStudio e a linguagem Markdown. Para saber mais sobre eles, acesse:
+
+<http://www.r-project.org/>
+
+<http://www.rstudio.com>
+
+<http://rmarkdown.rstudio.com/>
+
+
+\ 
+
+**Quer comentar ou perguntar? Faça isso no blog, [aqui](https://cantinhodor.wordpress.com/arquivo/)**
+
+\ 
+
+***
+

@@ -1,0 +1,148 @@
+---
+title: "Estatística Multivariada - aula 0"
+author: "Marcos Vital"
+date: "10 de agosto de 2017"
+output: html_document
+---
+
+### Aula preliminar da disciplina Estatística Multivariada, do PPG-DIBICT UFAL
+
+Por [Marcos Vital](https://medium.com/@marcosvital), do [LEQ-UFAL](https://www.facebook.com/leq.ufal/)
+
+
+Este documento é o primeiro de uma série de scripts que foram construídos ao longo da disciplina de Estatística Multivariada ministrada por mim no Programa de Pós-graduação em Diversidade Biológica e Conservação dos Trópicos da UFAL. Os scripts foram desenvolvidos durante as aulas e, posteriormente, editados para pequenas melhorias, correções e comentários. Apesar do objetivo central é servir como material de apoio para os estudantes que cursaram a disciplina, a ideia também era documentar as atividades práticas de tal forma que eles possam ser úteis para outras pessoas.
+
+Como está é uma aula introdutória anterior ao conteúdo sobre Multivariada, considero-a como uma "aula 0". ;)
+
+Este primeiro e pequeno script foi construído para revisarmos rapidamente alguns dos elementos básicos do R, uma vez que a turma era bastante heterogênea em termos de experiência prévia com a linguagem. O principal objetivo aqui foi rever a estrutura de um data-frame no R e criar alguns gráficos simples.
+
+\ 
+
+***
+
+\ 
+
+### Carregando e conferindo os dados
+
+Aqui vamos carregar um conjunto de dados "nativo" do próprio R, usando a função `data`:
+
+```{r}
+data(iris)  #carrega o conjunto de dados iris
+```
+
+Você pode mostrar os dados no console do R toscamente, assim:
+```{r}
+iris        #mostra todo o objeto no console (ruim se o objeto for grande!)
+```
+
+Mas provavelmente vai ser melhor usar uma das funções a seguir:
+
+```{r}
+summary(iris)   #resume o objeto
+str(iris)       #Mostra a estrutura do objeto (alternativa ao summary)
+```
+
+\ 
+
+***
+
+\ 
+
+### Entendendo um data-frame no R
+
+Os dados que usamos no R (como os do exemplo acima), são tipicamente armazenados em um objeto da categoria `data.frame`. Aprender como este tipo de objeto funciona é fundamental para se usar bem o R.
+
+**O uso do $ para acessar uma coluna qualquer:**
+
+```{r}
+#Essa é fácil:
+iris$Sepal.Width  #mostra apenas a coluna indicada
+```
+
+**Usando colchetes para se acessar linhas ou colunas:**
+
+A forma geral é fácil de entender: `objeto[linhas, colunas]`. O melhor é aprender com exemplos, olhe aqui:
+
+```{r}
+iris [ , 2]                    #mostra apenas a coluna 2
+iris [4, ]                     #mostra apenas a linha 4
+iris[1:10, ]                   #mostra linhas 1 a 10
+iris[ , 3:4]                   #mostra colunas 3 a 4
+iris [2:6, 1]                  #linhas de 2 a 6 da coluna 1
+iris [ ,c(2, 4)]               #colunas 2 e 4 (usando concatenar)
+iris[c(1:10, 15:20), c(1, 5)]  #linhas 1 a 10 e 15 a 20, colunas 1 e 5
+```
+
+\ 
+
+***
+
+\ 
+
+### Um pouquinho de gráficos
+
+Vamos explorar rapidamente alguns elementos dos gráficos básicos do R. Lá vai:
+
+```{r}
+plot(iris$Petal.Length, iris$Petal.Width, las=1, pch=16,
+xlab="Comprimento das pétalas", ylab="Largura das pétalas")
+
+#se quiser ver todas as possibilidades, chame ?par
+
+#las define a orientação dos números dos eixos x e y
+
+#pch define o tipo de símbolo, veja ?pch para mais detalhes
+
+#xlab e ylab dão nomes aos eixos
+
+```
+
+Agora vamos elaborar mais um pouco, adicionando cores e legenda:
+
+```{r}
+levels(iris$Species)  #Para conferir a ordem das espécies
+cores<-c("red4", "green4", "blue4")  #Atribuindo uma cor para cada espécie
+
+plot(iris$Petal.Length, iris$Petal.Width, las=1, pch=16,
+xlab="Comprimento das pétalas", ylab="Largura das pétalas",
+col=cores[iris$Species])
+
+especies<-levels(iris$Species)
+legend("topleft", legend=especies, col=cores, pch=16, text.font=3)
+
+#"topleft" foi a posição (canto superior esquerdo)
+
+#legend etabeleceu o que foi escrito
+
+#tex.font mudou o tipo de fonte (2 para negrito, 3 para itálico, 4 os dois)
+
+```
+
+E pronto! Avisei que seria um script curto. :D
+
+
+Um abração, e até o próximo script!
+
+
+[Prof Marcos](https://medium.com/@marcosvital)
+
+\ 
+
+***
+
+Este documento faz parte do material que disponibilizo no meu blog, o ["Cantinho do R"](http://cantinhodor.wordpress.com/), e foi  foi criado utilizando o software R, o programa RStudio e a linguagem Markdown. Para saber mais sobre eles, acesse:
+
+<http://www.r-project.org/>
+
+<http://www.rstudio.com>
+
+<http://rmarkdown.rstudio.com/>
+
+
+\ 
+
+**Quer comentar ou perguntar? Faça isso no blog, [aqui](https://cantinhodor.wordpress.com/arquivo/)**
+
+\ 
+
+***
