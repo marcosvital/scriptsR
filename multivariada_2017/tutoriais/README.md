@@ -7,6 +7,6 @@ Como o GitHub não renderiza estes arquivos automaticamente, você pode acessá-
 Lembre-se de que estes não são turoriais completos, pois foram gerados apenas como material de suporte para a disciplina. Ainda assim, deve quebrar o galho para quem está aprendendo multivariada no R.
 
 ### Acesse os tutoriais aqui:
-- Aula 0
-- Aula 1
+- [Aula 0](https://rawgit.com/marcosvital/scriptsR/master/multivariada_2017/tutoriais/aula_0.html)
+- [Aula 1](https://rawgit.com/marcosvital/scriptsR/master/multivariada_2017/tutoriais/aula_1.html)
 
