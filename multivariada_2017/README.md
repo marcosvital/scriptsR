@@ -10,6 +10,4 @@ Perceba que este material **não** visa apresentar os fundamentos teóricos da d
 
 Quase todos os procedimentos aqui foram retirados (com ou sem modificação) do que é apresentado no livro [Numerical Ecology with R](http://adn.biol.umontreal.ca/~numericalecology/numecolR/), uma excelente fonte para quem quer estudar e saber mais.
 
-## Índice
-
-Em breve vou organizar aqui um índice contento links diretos para o material. Aguarde. ;)
+Se você quer ver os tutoriais prontinhos gerados em cada aula, acesse a pasta tutoriais e seja feliz. :D
