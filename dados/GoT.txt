@@ -1,0 +1,10 @@
+Nome	Flores
+Jory	29633
+Mycah	30824
+Syrio	2231
+Viserys	28159
+Lady	151897
+Jon_Arryn	38783
+Robert	71261
+Drogo	164944
+Ned	260678
